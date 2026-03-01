@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register & Login</title>
+  <style>
+    .container{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px solid black;
+    }
+    .container1{
+       display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+<h2 style="font-size: 50px; color:chartreuse ;">Register / Login</h2>
+
+<input id="name" placeholder="Name (for register)" style="height: 40px; width: 250px; background-color: burlywood;"><br><br>
+<input id="email" placeholder="Email" style="height: 40px; width: 250px; background-color: burlywood;"><br><br>
+<input id="password" type="password" placeholder="Password" style="height: 40px; width: 250px; background-color: burlywood;"><br><br>
+<div class="container1">
+<button type="button" onclick="register()" style="width: 70px; height: 30px; color: red;">Register</button>
+<button type="button" onclick="login()" style="width: 70px; height: 30px; color: darkgreen;">Login</button>
+</div>
+<p id="msg"></p>
+</div>
+
+<script>
+const msg = document.getElementById("msg");
+const name = document.getElementById("name");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+
+async function register() {
+  try{
+  const res = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name:name.value,
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+  console.log(data);
+  msg.innerText = data.msg || data.error;
+}
+catch(error){
+msg.innerText =" Something Went Wrong";
+}
+}
+
+async function login() {
+  const res = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+  msg.innerText = data.msg || data.error;
+}
+</script>
+
+</body>
+</html>
